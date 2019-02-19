@@ -10,6 +10,7 @@
 
 #include "Renderer.h"
 #include "GLContext.h"
+#include "LogUtil.h"
 
 namespace common {
 
@@ -136,7 +137,7 @@ void Engine::terminate() {
 
 void Engine::trimMemory() {
 #ifdef __ANDROID__
-    // TODO: log
+    ALOGV("Trim memory");
     m_GLcontext->invalidate();
 #endif
 }

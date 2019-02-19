@@ -2,7 +2,7 @@
 
 #ifdef __ANDROID__
 #include <GLES3/gl32.h>
-#include "log_util.h"
+#include "LogUtil.h"
 
 namespace util {
 bool OpenGLCommon::CheckGLError(const std::string &func) {

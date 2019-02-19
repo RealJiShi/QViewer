@@ -1,4 +1,4 @@
-#include "OpenGLShaderProgram.h"
+ #include "OpenGLShaderProgram.h"
 
 #if defined(__WIN32) || defined(__WIN64)
 #define GL_GLEXT_PROTOTYPES
@@ -11,7 +11,7 @@
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "log_util.h"
+#include "LogUtil.h"
 
 #define UNIFORM_LOCATION \
     glGetUniformLocation(m_programID, name.c_str())

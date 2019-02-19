@@ -16,4 +16,5 @@ endif (ANDROID)
 
 # subdirectory
 add_subdirectory(./common)
+add_subdirectory(./util)
 add_subdirectory(./src/main/cpp)

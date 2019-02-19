@@ -1,5 +1,6 @@
 #include "GLContext.h"
 #include <string>
+#include "LogUtil.h"
 
 namespace common {
 
@@ -122,7 +123,7 @@ bool GLContext::initEGLSurface() {
     }
 
     if (!num_configs) {
-        // TODO: log
+
         return false;
     }
 
@@ -140,7 +141,7 @@ bool GLContext::initEGLContext() {
     m_context = eglCreateContext(m_display, m_config, nullptr, context_attribs);
 
     if (eglMakeCurrent(m_display, m_surface, m_surface, m_context) == EGL_FALSE) {
-        // TODO: log
+        ALOGE("Unable to retrieve EGL config");
         return false;
     }
 
@@ -197,7 +198,7 @@ EGLint GLContext::resume(ANativeWindow *window) {
     eglQuerySurface(m_display, m_surface, EGL_HEIGHT, &m_screenHeight);
 
     if (m_screenWidth != original_width || m_screenHeight != original_height) {
-        // TODO: log
+        ALOGV("Screen resized");
     }
 
     if (eglMakeCurrent(m_display, m_surface, m_surface, m_context) == EGL_TRUE)  {
@@ -206,10 +207,10 @@ EGLint GLContext::resume(ANativeWindow *window) {
 
     // print err log
     EGLint err = eglGetError();
-    // TODO: log
+    ALOGE("Unable to eglMakeCurrent %d", err);
 
     if (err == EGL_CONTEXT_LOST) {
-        // TODO: log
+        ALOGV("Re-creating egl context");
         initEGLContext();
     } else {
         terminate();

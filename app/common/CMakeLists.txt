@@ -5,6 +5,8 @@ set(OPENGL_LIB GLESv3)
 
 # include
 include_directories(./)
+include_directories(../util/)
+include_directories(../3rd_party/glm)
 if (ANDROID)
     include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
 endif(ANDROID)
@@ -14,5 +16,5 @@ aux_source_directory(./src SRC)
 add_library(common SHARED ${SRC})
 
 # library
-target_link_libraries(common ${OPENGL_LIB} android native_app_glue EGL log)
+target_link_libraries(common ${OPENGL_LIB} android native_app_glue EGL log gl-util)
 
