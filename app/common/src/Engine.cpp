@@ -94,7 +94,7 @@ int Engine::onInitDisplay(struct android_app *app) {
 
     // set screen
     glViewport(0, 0, m_GLcontext->getScreenWidth(), m_GLcontext->getScreenHeight());
-
+    ALOGV("Viewport: %d, %d", m_GLcontext->getScreenWidth(), m_GLcontext->getScreenHeight());
     // TODO: camera
 #endif
     return 0;

@@ -33,8 +33,11 @@ set(CMAKE_SHARED_LINKER_FLAGS
     "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 
 include_directories(../../../common)
+include_directories(../../../util)
+include_directories(../../../3rd_party/glm)
+include_directories(.)
 
-add_library(QViewer SHARED main.cpp)
+add_library(QViewer SHARED main.cpp CubeRenderer.cpp)
 
 target_include_directories(QViewer PRIVATE
     ${ANDROID_NDK}/sources/android/native_app_glue)

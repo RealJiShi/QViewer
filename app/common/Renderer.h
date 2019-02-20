@@ -21,7 +21,7 @@ namespace common {
 
 class Renderer {
 public:
-    virtual ~Renderer();
+    virtual ~Renderer() {}
 #ifdef __ANDROID__
     virtual void init(AAssetManager *amgr) = 0;
 #endif
@@ -29,8 +29,6 @@ public:
     virtual void render() = 0;
     virtual void unload() = 0;
 };
-
-Renderer::~Renderer() {}
 
 } // namespace common
 

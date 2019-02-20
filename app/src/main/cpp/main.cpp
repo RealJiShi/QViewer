@@ -1,5 +1,5 @@
 #include "Engine.h"
-#include "Renderer.h"
+#include "CubeRenderer.h"
 
 #ifdef __ANDROID__
 #include <android/sensor.h>
@@ -24,7 +24,7 @@ public:
 
 void android_main(struct android_app* state) {
     // initialize engine
-    auto renderer = std::make_shared<NativeRenderer>();
+    auto renderer = std::make_shared<CubeRenderer>();
     common::Engine g_engine(renderer);
     g_engine.setState(state);
     // TODO: initialize sensor, handle input
