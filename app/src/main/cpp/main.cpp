@@ -32,6 +32,7 @@ void android_main(struct android_app* state) {
 #ifdef __ANDROID__
     state->userData = &g_engine;
     state->onAppCmd = common::Engine::handleCmd;
+    state->onInputEvent = common::Engine::handleInput;
 
     // loop waiting for stuff to do.
     while (1) {
@@ -51,6 +52,7 @@ void android_main(struct android_app* state) {
             }
 
             // TODO: process sensors
+            g_engine.processSensors(id);
 
             // Check if we are exiting.
             if (state->destroyRequested != 0) {

@@ -10,6 +10,8 @@
 #include <android/asset_manager.h>
 #endif
 
+#include "SensorManager.h"
+
 // For local programming, no meaning
 #if defined(__WIN32) || defined(__WIN64)
 #define GL_GLEXT_PROTOTYPES
@@ -28,6 +30,10 @@ public:
     virtual GLint getTextureType() = 0;
     virtual void render() = 0;
     virtual void unload() = 0;
+    void bindSensor(const SensorManagerPtr &sensorMgr) { m_sensorManager = sensorMgr; }
+
+protected:
+    SensorManagerPtr m_sensorManager;
 };
 
 } // namespace common

@@ -1,6 +1,9 @@
 #include "CubeRenderer.h"
+
 #include <glm/gtc/matrix_transform.hpp>
+
 #include "LogUtil.h"
+#include "SensorManager.h"
 
 static glm::vec4 Vertices[] = {
     // front
@@ -62,7 +65,8 @@ CubeRenderer::~CubeRenderer() {
 }
 
 void CubeRenderer::render() {
-    glClearColor(0.8f, 0.8f, 0.7f, 1.0f);
+    common::AcceleratorState state = m_sensorManager->getState();
+    glClearColor(state.X / 10.0, state.Y / 10.0, state.Z / 10.0, 1.0f);
     glClear (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
     m_program->bind();
@@ -78,7 +82,10 @@ GLint CubeRenderer::getTextureType() {
 }
 
 void CubeRenderer::unload() {
-    // empty function
+    for (auto model : m_models) {
+        model.reset();
+    }
+    m_program.reset();
 }
 
 void CubeRenderer::setup() {

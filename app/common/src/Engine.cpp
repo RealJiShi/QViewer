@@ -4,7 +4,6 @@
 
 #ifdef __ANDROID__
 #include <jni.h>
-#include <android_native_app_glue.h>
 #include <android/native_window_jni.h>
 #endif
 
@@ -19,6 +18,7 @@ Engine::Engine(const std::shared_ptr<Renderer> &renderer) :
     m_hasFocus(false) {
     // init GL context
     m_GLcontext = GLContext::Get();
+    m_sensorManager = std::make_shared<SensorManager>();
 }
 
 Engine::~Engine() {
@@ -47,11 +47,11 @@ void Engine::handleCmd(struct android_app *app, int32_t cmd) {
     case APP_CMD_STOP:
         break;
     case APP_CMD_GAINED_FOCUS:
-        // TODO: sensor
+        engine->getSensorMgr()->resume();
         engine->m_hasFocus = true;
         break;
     case APP_CMD_LOST_FOCUS:
-        // TODO: sensor and focus
+        engine->getSensorMgr()->suspend();
         engine->m_hasFocus = false;
         engine->draw();
         break;
@@ -61,6 +61,16 @@ void Engine::handleCmd(struct android_app *app, int32_t cmd) {
     }
 #endif
 }
+
+#ifdef __ANDROID__
+int32_t Engine::handleInput(struct android_app *app, AInputEvent *event) {
+    Engine *engine = (Engine *)(app->userData);
+    if (engine) {
+        // handle
+    }
+    return 0;
+}
+#endif
 
 int Engine::onInitDisplay(struct android_app *app) {
 #ifdef __ANDROID__
@@ -94,7 +104,7 @@ int Engine::onInitDisplay(struct android_app *app) {
 
     // set screen
     glViewport(0, 0, m_GLcontext->getScreenWidth(), m_GLcontext->getScreenHeight());
-    ALOGV("Viewport: %d, %d", m_GLcontext->getScreenWidth(), m_GLcontext->getScreenHeight());
+
     // TODO: camera
 #endif
     return 0;
@@ -102,13 +112,19 @@ int Engine::onInitDisplay(struct android_app *app) {
 
 void Engine::setState(struct android_app *state) {
     m_app = state;
-    // TODO: set detector..
+#ifdef __ANDROID__
+    m_sensorManager->init(state);
+#endif
 }
 
 void Engine::loadResources() {
 #ifdef __ANDROID__
     m_renderer->init(m_app->activity->assetManager);
     // TODO: bind camera
+
+    // bind sensor
+    m_renderer->bindSensor(m_sensorManager);
+
 #endif
 }
 
@@ -147,6 +163,10 @@ bool Engine::isReady() const {
         return true;
     }
     return false;
+}
+
+void Engine::processSensors(int32_t id) {
+    m_sensorManager->processSensors(id);
 }
 
 } // namespace common

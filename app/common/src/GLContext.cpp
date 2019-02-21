@@ -123,7 +123,7 @@ bool GLContext::initEGLSurface() {
     }
 
     if (!num_configs) {
-
+        ALOGE("Unable to retrieve EGL config!");
         return false;
     }
 
@@ -141,7 +141,7 @@ bool GLContext::initEGLContext() {
     m_context = eglCreateContext(m_display, m_config, nullptr, context_attribs);
 
     if (eglMakeCurrent(m_display, m_surface, m_surface, m_context) == EGL_FALSE) {
-        ALOGE("Unable to retrieve EGL config");
+        ALOGE("Unable to eglMakeCurrent");
         return false;
     }
 
@@ -191,6 +191,10 @@ EGLint GLContext::resume(ANativeWindow *window) {
     int32_t original_width = m_screenWidth;
     int32_t original_height = m_screenHeight;
 
+    terminate();
+    initEGLSurface();
+    initEGLContext();
+
     // create surface
     m_window = window;
     m_surface = eglCreateWindowSurface(m_display, m_config, m_window, nullptr);
@@ -214,7 +218,7 @@ EGLint GLContext::resume(ANativeWindow *window) {
         initEGLContext();
     } else {
         terminate();
-        initEGLContext();
+        initEGLSurface();
         initEGLContext();
     }
     return err;

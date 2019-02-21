@@ -2,6 +2,11 @@
 #define _COMMON_ENGINE_H_
 
 #include <memory>
+#ifdef __ANDROID__
+#include <android_native_app_glue.h>
+#endif
+
+#include "SensorManager.h"
 
 struct android_app;
 
@@ -17,6 +22,9 @@ public:
 
     // hanlde functions
     static void handleCmd(struct android_app *app, int32_t cmd);
+#ifdef __ANDROID__
+    static int32_t handleInput(struct android_app *app, AInputEvent *event);
+#endif
 
     // TODO: hanlde input function
 
@@ -31,8 +39,10 @@ public:
     void trimMemory();
 
     bool isReady() const;
+    SensorManagerPtr getSensorMgr() const { return m_sensorManager; }
 
     // TODO: some camera, sensor functions
+    void processSensors(int32_t id);
 
 private:
     // TODO:
@@ -48,6 +58,9 @@ private:
     // flag
     bool m_initializedResources;
     bool m_hasFocus;
+
+    // sensor
+    SensorManagerPtr m_sensorManager;
 
     // TODO: tap, pinch, drag, perf...
 
