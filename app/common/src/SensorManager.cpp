@@ -6,7 +6,6 @@
 #include "LogUtil.h"
 
 namespace common {
-
 SensorManager::SensorManager() :
     m_sensorManger(nullptr), m_sensorEventQueue(nullptr),
     m_accelerometerSensor(nullptr) {
@@ -92,7 +91,6 @@ void SensorManager::processSensors(int32_t id) {
         }
     }
 }
-
 #endif
 
 } // namespace common

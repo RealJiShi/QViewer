@@ -11,7 +11,9 @@ class NativeRenderer : public common::Renderer {
 public:
     NativeRenderer() {}
     virtual ~NativeRenderer() {}
+#ifdef __ANDROID__
     virtual void init(AAssetManager *amgr) {}
+#endif
     virtual void render() {
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glClearColor(1.0f, 0.5f, 0.5f, 1.0f);
@@ -25,11 +27,10 @@ public:
 void android_main(struct android_app* state) {
     // initialize engine
     auto renderer = std::make_shared<CubeRenderer>();
+#ifdef __ANDROID__
     common::Engine g_engine(renderer);
     g_engine.setState(state);
-    // TODO: initialize sensor, handle input
 
-#ifdef __ANDROID__
     state->userData = &g_engine;
     state->onAppCmd = common::Engine::handleCmd;
     state->onInputEvent = common::Engine::handleInput;

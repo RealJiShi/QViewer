@@ -7,6 +7,7 @@
 #endif
 
 #include "SensorManager.h"
+#include "GestureManager.h"
 
 struct android_app;
 
@@ -25,8 +26,6 @@ public:
 #ifdef __ANDROID__
     static int32_t handleInput(struct android_app *app, AInputEvent *event);
 #endif
-
-    // TODO: hanlde input function
 
     void setState(struct android_app *state);
     int onInitDisplay(struct android_app *app);

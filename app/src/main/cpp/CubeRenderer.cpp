@@ -65,8 +65,10 @@ CubeRenderer::~CubeRenderer() {
 }
 
 void CubeRenderer::render() {
+#ifdef __ANDROID__
     common::AcceleratorState state = m_sensorManager->getState();
     glClearColor(state.X / 10.0, state.Y / 10.0, state.Z / 10.0, 1.0f);
+#endif
     glClear (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
     m_program->bind();

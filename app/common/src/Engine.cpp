@@ -10,6 +10,7 @@
 #include "Renderer.h"
 #include "GLContext.h"
 #include "LogUtil.h"
+#include "GestureManager.h"
 
 namespace common {
 
@@ -19,6 +20,8 @@ Engine::Engine(const std::shared_ptr<Renderer> &renderer) :
     // init GL context
     m_GLcontext = GLContext::Get();
     m_sensorManager = std::make_shared<SensorManager>();
+    // seems need to change
+    GestureManager::Get();
 }
 
 Engine::~Engine() {
@@ -26,7 +29,6 @@ Engine::~Engine() {
 }
 
 void Engine::handleCmd(struct android_app *app, int32_t cmd) {
-#ifdef __ANDROID__
     Engine *engine = (Engine *)app->userData;
     switch (cmd) {
     case APP_CMD_SAVE_STATE:
@@ -59,21 +61,33 @@ void Engine::handleCmd(struct android_app *app, int32_t cmd) {
         engine->trimMemory();
         break;
     }
-#endif
 }
 
-#ifdef __ANDROID__
 int32_t Engine::handleInput(struct android_app *app, AInputEvent *event) {
     Engine *engine = (Engine *)(app->userData);
     if (engine) {
-        // handle
+#ifdef __ANDROID__
+        if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) {
+            common::GestureType type = GestureManager::Get()->detect(event);
+            switch (type) {
+            case GESTURE_DOUBLE_TAP:
+                break;
+            case GESTURE_TAP:
+                break;
+            case GESTURE_DRAG:
+                break;
+            case GESTURE_PINCH:
+                break;
+            default:
+                break;
+            }
+        }
+#endif
     }
     return 0;
 }
-#endif
 
 int Engine::onInitDisplay(struct android_app *app) {
-#ifdef __ANDROID__
     if (!m_initializedResources) {
         m_GLcontext->init(m_app->window);
         loadResources();
@@ -106,26 +120,21 @@ int Engine::onInitDisplay(struct android_app *app) {
     glViewport(0, 0, m_GLcontext->getScreenWidth(), m_GLcontext->getScreenHeight());
 
     // TODO: camera
-#endif
     return 0;
 }
 
 void Engine::setState(struct android_app *state) {
     m_app = state;
-#ifdef __ANDROID__
     m_sensorManager->init(state);
-#endif
+    GestureManager::Get()->setConfiguration(state->config);
 }
 
 void Engine::loadResources() {
-#ifdef __ANDROID__
     m_renderer->init(m_app->activity->assetManager);
     // TODO: bind camera
 
     // bind sensor
     m_renderer->bindSensor(m_sensorManager);
-
-#endif
 }
 
 void Engine::unloadResources() {
@@ -136,26 +145,20 @@ void Engine::draw() {
     // TODO: fps...
     m_renderer->render();
 
-#ifdef __ANDROID__
     // swap
     if (EGL_SUCCESS != m_GLcontext->swap()) {
         unloadResources();
         loadResources();
     }
-#endif
 }
 
 void Engine::terminate() {
-#ifdef __ANDROID__
     m_GLcontext->suspend();
-#endif
 }
 
 void Engine::trimMemory() {
-#ifdef __ANDROID__
     ALOGV("Trim memory");
     m_GLcontext->invalidate();
-#endif
 }
 
 bool Engine::isReady() const {
