@@ -16,7 +16,7 @@ public:
     CubeRenderer();
     virtual ~CubeRenderer();
 #ifdef __ANDROID__
-    virtual void init(AAssetManager *amgr);
+    virtual void init();
 #endif
     virtual void render();
     virtual GLint getTextureType();

@@ -8,4 +8,4 @@ include_directories(./)
 aux_source_directory(./src SRC)
 add_library(gl-util SHARED ${SRC})
 
-target_link_libraries(gl-util ${OPENGL_LIB} log)
+target_link_libraries(gl-util ${OPENGL_LIB} log android)

@@ -9,9 +9,11 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <vector>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "LogUtil.h"
+#include "AssetHelper.h"
 
 #define UNIFORM_LOCATION \
     glGetUniformLocation(m_programID, name.c_str())
@@ -43,21 +45,16 @@ bool OpenGLShader::compileSourceCode(const std::string &source) {
 }
 
 bool OpenGLShader::compileSourceFile(const std::string &filename) {
-    std::ifstream _file;
-    _file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    try {
-        _file.open(filename);
-        std::stringstream _stream;
-        _stream << _file.rdbuf();
-        _file.close();
-        const std::string &source = _stream.str();
-        return compileSourceCode(source);
-    } catch (std::ifstream::failure e) {
+    std::vector<uint8_t> data;
+    if (!AssetHelper::Get()->AssetReadFile(filename, data)) {
 #ifdef __ANDROID__
-        ALOGE("Cannot open %s()\n", filename.c_str());
+        ALOGE("Cannot open a file: %s!\n", filename.c_str());
 #endif
     }
-    return false;
+    char *p_shader = (char *)(data.data());
+    glShaderSource(m_shaderID, 1, &p_shader, nullptr);
+    glCompileShader(m_shaderID);
+    return checkCompileErrors();
 }
 
 void OpenGLShader::init() {

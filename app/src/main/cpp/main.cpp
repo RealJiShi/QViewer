@@ -12,7 +12,7 @@ public:
     NativeRenderer() {}
     virtual ~NativeRenderer() {}
 #ifdef __ANDROID__
-    virtual void init(AAssetManager *amgr) {}
+    virtual void init() {}
 #endif
     virtual void render() {
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);

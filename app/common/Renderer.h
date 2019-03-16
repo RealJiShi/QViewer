@@ -25,7 +25,7 @@ class Renderer {
 public:
     virtual ~Renderer() {}
 #ifdef __ANDROID__
-    virtual void init(AAssetManager *amgr) = 0;
+    virtual void init() = 0;
 #endif
     virtual GLint getTextureType() = 0;
     virtual void render() = 0;

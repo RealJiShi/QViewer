@@ -11,6 +11,7 @@
 #include "GLContext.h"
 #include "LogUtil.h"
 #include "GestureManager.h"
+#include "AssetHelper.h"
 
 namespace common {
 
@@ -125,12 +126,13 @@ int Engine::onInitDisplay(struct android_app *app) {
 
 void Engine::setState(struct android_app *state) {
     m_app = state;
+    util::AssetHelper::Get()->Init(m_app->activity->assetManager);
     m_sensorManager->init(state);
     GestureManager::Get()->setConfiguration(state->config);
 }
 
 void Engine::loadResources() {
-    m_renderer->init(m_app->activity->assetManager);
+    m_renderer->init();
     // TODO: bind camera
 
     // bind sensor

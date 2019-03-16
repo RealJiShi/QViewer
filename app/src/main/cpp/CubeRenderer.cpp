@@ -39,23 +39,6 @@ static GLuint Indices[] = {
     6, 7, 3,
 };
 
-static const char *VERTEX_SHADER =
-        "#version 300 es\n"
-        "layout(location = 0) in vec4 inPos;\n"
-        "out vec4 fColor;\n"
-        "uniform mat4 mvp;\n"
-        "void main() {\n"
-        "    gl_Position = mvp * inPos;\n"
-        "}";
-
-static const char *FRAG_SHADER =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 Color;\n"
-        "void main() {\n"
-        "    Color = vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
-
 CubeRenderer::CubeRenderer() :
     m_camera(glm::mat4(1.0f)) {
 }
@@ -93,8 +76,8 @@ void CubeRenderer::unload() {
 void CubeRenderer::setup() {
     // shader
     m_program = std::make_shared<util::OpenGLShaderProgram>();
-    m_program->addShaderFromSourceCode(util::OpenGLShader::Vertex, VERTEX_SHADER);
-    m_program->addShaderFromSourceCode(util::OpenGLShader::Fragment, FRAG_SHADER);
+    m_program->addShaderFromSourceFile(util::OpenGLShader::Vertex, "Shaders/shader.vs");
+    m_program->addShaderFromSourceFile(util::OpenGLShader::Fragment, "Shaders/shader.fs");
     m_program->link();
 
     // model
@@ -127,7 +110,7 @@ void CubeRenderer::setup() {
 }
 
 #ifdef __ANDROID__
-void CubeRenderer::init(AAssetManager *amgr) {
+void CubeRenderer::init() {
     // initialization should be here
     setup();
 }
